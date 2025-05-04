@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "terraform"
+    directories:
+      - "/terraform"
+    groups:
+      terraform-modules:
+        patterns:
+          - "*terraform-modules*"
+    schedule:
+      interval: "weekly"
