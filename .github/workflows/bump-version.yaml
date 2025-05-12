@@ -18,19 +18,19 @@ jobs:
 
       - name: Assume IAM Role
         id: assume-iam-role
-        uses: bitterbridge/github-actions/assume-iam-role@v0.0.40
+        uses: bitterbridge/github-actions/assume-iam-role@v0.0.41
         with:
           role-to-assume: ${{ vars.IAM_ROLE_TO_ASSUME }}
 
       - name: Get GitHub Token
         id: get-github-token
-        uses: bitterbridge/github-actions/get-github-token@v0.0.40
+        uses: bitterbridge/github-actions/get-github-token@v0.0.41
         with:
           github-app-id-secret-path: ${{ vars.APP_ID_SECRET_PATH }}
           github-app-private-key-secret-path: ${{ vars.APP_PRIVATE_KEY_SECRET_PATH }}
 
       - name: Bump version
         id: bump-version
-        uses: bitterbridge/github-actions/bump-version@v0.0.40
+        uses: bitterbridge/github-actions/bump-version@v0.0.41
         with:
           github-token: ${{ steps.get-github-token.outputs.github-token}}
