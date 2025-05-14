@@ -1,9 +1,9 @@
-name: Continuous Delivery
+name: Scheduled Terraform Apply
+run-name: Scheduled Terraform Apply
+
 on:
-  push:
-    branches:
-      - main
-  workflow_call:
+  schedule:
+    - cron: '0 * * * *' # Every hour
   workflow_dispatch:
 
 permissions:
@@ -24,8 +24,3 @@ jobs:
     uses: ./.github/workflows/terraform-apply.yaml
     with:
       apply: true
-
-  bump-version:
-    name: "Bump version"
-    needs: [terraform-apply]
-    uses: ./.github/workflows/bump-version.yaml
