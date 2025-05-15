@@ -75,7 +75,7 @@ jobs:
 
       - name: Terraform Apply
         id: terraform-apply
-        uses: bitterbridge/github-actions/terraform-apply@v0.0.4
+        uses: bitterbridge/github-actions/terraform-apply@v0.0.46
         if: ${{ inputs.apply && steps.terraform-plan.outputs.plan-did-change == 'true' }}
         env:
           GITHUB_TOKEN: ${{ steps.get-github-token.outputs.github-token }}
