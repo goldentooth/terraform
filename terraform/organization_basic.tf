@@ -1,5 +1,5 @@
 module "organization_basic" {
-  source = "github.com/bitterbridge/terraform-modules//terraform/modules/organization_basic?ref=v0.0.25"
+  source = "github.com/bitterbridge/terraform-modules//terraform/modules/organization_basic?ref=v0.0.26"
 
   organization_name = "goldentooth"
 }
