@@ -1,6 +1,6 @@
 resource "aws_cloudfront_origin_request_policy" "cloud_proxy" {
   name    = "goldentooth-cloud-proxy"
-  comment = "For GoldenTooth: forward original Host header and all headers"
+  comment = "For Goldentooth: forward original Host header and all headers"
 
   headers_config {
     header_behavior = "allViewer"

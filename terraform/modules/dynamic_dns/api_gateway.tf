@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "dynamic_dns" {
-  name          = "GoldenTooth Cluster Dynamic DNS"
+  name          = "Goldentooth Cluster Dynamic DNS"
   protocol_type = "HTTP"
 }
 

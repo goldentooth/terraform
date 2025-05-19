@@ -1,6 +1,6 @@
 resource "aws_cloudfront_origin_request_policy" "bare_domain" {
   name    = "goldentooth-bare-domain"
-  comment = "For GoldenTooth: forward all headers"
+  comment = "For Goldentooth: forward all headers"
 
   headers_config {
     header_behavior = "allViewer"
@@ -17,7 +17,7 @@ resource "aws_cloudfront_origin_request_policy" "bare_domain" {
 
 resource "aws_cloudfront_origin_access_control" "bare_domain" {
   name                              = "goldentooth-bare-domain"
-  description                       = "GoldenTooth bare domain"
+  description                       = "Goldentooth bare domain"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
