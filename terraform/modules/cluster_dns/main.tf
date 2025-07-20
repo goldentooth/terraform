@@ -14,6 +14,8 @@ locals {
     "*.services",             # Cluster-wide services via HAProxy
     "*.services.nomad",       # Nomad services via HAProxy
   ]
+  # Note: *.services.k8s is intentionally excluded - ExternalDNS manages this subdomain
+  # with direct A records to MetalLB IPs, not HAProxy routing
 }
 
 # Individual node A records - direct access to node IPs
