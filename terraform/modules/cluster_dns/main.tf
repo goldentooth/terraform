@@ -13,9 +13,9 @@ locals {
     "*.nodes",                # Node homepages via HAProxy SNI
     "*.services",             # Cluster-wide services via HAProxy
     "*.services.nomad",       # Nomad services via HAProxy
+    "*.services.k8s",         # Kubernetes services via HAProxy TLS termination
   ]
-  # Note: *.services.k8s is intentionally excluded - ExternalDNS manages this subdomain
-  # with direct A records to MetalLB IPs, not HAProxy routing
+  # Note: *.metallb.k8s will be managed separately for direct MetalLB access
 }
 
 # Individual node A records - direct access to node IPs
@@ -81,3 +81,4 @@ resource "aws_route53_record" "external_services_cname" {
   ttl     = 300  # 5 minutes for CNAME records
   records = [each.value.target]
 }
+

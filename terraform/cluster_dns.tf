@@ -1,37 +1,27 @@
-# Cluster DNS Configuration
-# Manages all DNS records for the Goldentooth cluster in a single Route53 zone
+# Dynamic HAProxy IP retrieval from Ansible inventory (only need allyrion for service wildcards)
+data "external" "haproxy_ip" {
+  program = ["bash", "-c", "cd ${path.module}/../../ansible && goldentooth debug_var allyrion ipv4_address --silent | grep '\"ipv4_address\":' | sed 's/.*\"ipv4_address\": \"\\(.*\\)\".*/\\1/' | jq -R '{ip: .}'"]
+}
 
+# Cluster DNS Configuration  
+# Manages all DNS records for the Goldentooth cluster in a single Route53 zone
 module "cluster_dns" {
   source = "./modules/cluster_dns"
 
   zone_id     = local.zone_id
   domain_name = local.domain_name
   default_ttl = local.default_ttl
-  haproxy_ip  = "10.4.0.10"  # allyrion
+  haproxy_ip  = data.external.haproxy_ip.result.ip
 
-  # Node IP mappings
-  nodes = {
-    allyrion  = "10.4.0.10"
-    bettley   = "10.4.0.11"
-    cargyll   = "10.4.0.12"
-    dalt      = "10.4.0.13"
-    erenford  = "10.4.0.14"
-    fenn      = "10.4.0.15"
-    gardener  = "10.4.0.16"
-    harlton   = "10.4.0.17"
-    inchfield = "10.4.0.18"
-    jast      = "10.4.0.19"
-    karstark  = "10.4.0.20"
-    lipps     = "10.4.0.21"
-    velaryon  = "10.4.0.30"
-  }
+  # No individual node DNS records - only service wildcards via HAProxy
+  nodes = {}
 
   # External services (non-cluster)
   external_services = {
     # GitHub Pages for documentation
     clog = {
       type   = "CNAME"
-      target = "goldentooth.github.io."  # Trailing dot for FQDN
+      target = "goldentooth.github.io"
     }
   }
 }
@@ -59,16 +49,19 @@ module "k8s_service_dns" {
   enable_external_dns_management = true
 }
 
+# MetalLB services are now managed entirely by external-dns
+# No static Terraform records to avoid conflicts
+
 # Outputs for use in other configurations
 output "cluster_dns" {
   description = "Cluster DNS configuration details"
   value = {
-    zone_id              = local.zone_id
-    domain_name          = local.domain_name
-    node_fqdns           = module.cluster_dns.node_fqdns
-    haproxy_domains      = module.cluster_dns.haproxy_target_domains
-    clearbrook_fqdn      = module.cluster_dns.clearbrook_fqdn
-    k8s_services_domain  = module.k8s_service_dns.k8s_services_domain
-    external_dns_filter  = module.k8s_service_dns.external_dns_filter_domain
+    zone_id             = local.zone_id
+    domain_name         = local.domain_name
+    haproxy_ip          = data.external.haproxy_ip.result.ip
+    haproxy_domains     = module.cluster_dns.haproxy_target_domains
+    clearbrook_fqdn     = module.cluster_dns.clearbrook_fqdn
+    k8s_services_domain = module.k8s_service_dns.k8s_services_domain
+    external_dns_filter = module.k8s_service_dns.external_dns_filter_domain
   }
 }

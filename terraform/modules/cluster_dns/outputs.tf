@@ -1,10 +1,3 @@
-output "node_fqdns" {
-  description = "Map of node names to their FQDNs"
-  value = {
-    for name, ip in var.nodes : name => "${name}.${var.domain_name}"
-  }
-}
-
 output "wildcard_domains" {
   description = "List of wildcard domains created"
   value       = [for domain in local.wildcard_domains : "${domain}.${var.domain_name}"]
