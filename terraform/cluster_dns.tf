@@ -3,7 +3,7 @@ data "external" "haproxy_ip" {
   program = ["bash", "-c", "cd ${path.module}/../../ansible && goldentooth debug_var allyrion ipv4_address --silent | grep '\"ipv4_address\":' | sed 's/.*\"ipv4_address\": \"\\(.*\\)\".*/\\1/' | jq -R '{ip: .}'"]
 }
 
-# Cluster DNS Configuration  
+# Cluster DNS Configuration
 # Manages all DNS records for the Goldentooth cluster in a single Route53 zone
 module "cluster_dns" {
   source = "./modules/cluster_dns"
@@ -20,6 +20,10 @@ module "cluster_dns" {
   external_services = {
     # GitHub Pages for documentation
     clog = {
+      type   = "CNAME"
+      target = "goldentooth.github.io"
+    }
+    p5js-sketches = {
       type   = "CNAME"
       target = "goldentooth.github.io"
     }
