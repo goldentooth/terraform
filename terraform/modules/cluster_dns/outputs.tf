@@ -3,6 +3,11 @@ output "wildcard_domains" {
   value       = [for domain in local.wildcard_domains : "${domain}.${var.domain_name}"]
 }
 
+output "haproxy_ip" {
+  description = "IP address of the HAProxy load balancer"
+  value       = var.haproxy_ip
+}
+
 output "haproxy_target_domains" {
   description = "Domains that route to HAProxy for SNI-based routing"
   value = {

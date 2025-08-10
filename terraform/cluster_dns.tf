@@ -1,8 +1,3 @@
-# Dynamic HAProxy IP retrieval from Ansible inventory (only need allyrion for service wildcards)
-data "external" "haproxy_ip" {
-  program = ["bash", "-c", "cd ${path.module}/../../ansible && goldentooth debug_var allyrion ipv4_address --silent | grep '\"ipv4_address\":' | sed 's/.*\"ipv4_address\": \"\\(.*\\)\".*/\\1/' | jq -R '{ip: .}'"]
-}
-
 # Cluster DNS Configuration
 # Manages all DNS records for the Goldentooth cluster in a single Route53 zone
 module "cluster_dns" {
@@ -11,7 +6,7 @@ module "cluster_dns" {
   zone_id     = local.zone_id
   domain_name = local.domain_name
   default_ttl = local.default_ttl
-  haproxy_ip  = data.external.haproxy_ip.result.ip
+  haproxy_ip  = "10.4.0.10"
 
   # No individual node DNS records - only service wildcards via HAProxy
   nodes = {}
@@ -62,7 +57,7 @@ output "cluster_dns" {
   value = {
     zone_id             = local.zone_id
     domain_name         = local.domain_name
-    haproxy_ip          = data.external.haproxy_ip.result.ip
+    haproxy_ip          = module.cluster_dns.haproxy_ip
     haproxy_domains     = module.cluster_dns.haproxy_target_domains
     clearbrook_fqdn     = module.cluster_dns.clearbrook_fqdn
     k8s_services_domain = module.k8s_service_dns.k8s_services_domain
