@@ -32,42 +32,42 @@ jobs:
 
       - name: Assume IAM Role
         id: assume-iam-role
-        uses: bitterbridge/github-actions/assume-iam-role@v0.0.47
+        uses: bitterbridge/github-actions/assume-iam-role@v0.0.48
         with:
           role-to-assume: ${{ vars.IAM_ROLE_TO_ASSUME }}
 
       - name: Get GitHub Token
         id: get-github-token
-        uses: bitterbridge/github-actions/get-github-token@v0.0.47
+        uses: bitterbridge/github-actions/get-github-token@v0.0.48
         with:
           github-app-id-secret-path: ${{ vars.APP_ID_SECRET_PATH }}
           github-app-private-key-secret-path: ${{ vars.APP_PRIVATE_KEY_SECRET_PATH }}
 
       - name: Read Terraform Version
         id: read-terraform-version
-        uses: bitterbridge/github-actions/read-terraform-version@v0.0.47
+        uses: bitterbridge/github-actions/read-terraform-version@v0.0.48
 
       - name: Setup Terraform
         id: setup-terraform
-        uses: bitterbridge/github-actions/setup-terraform@v0.0.47
+        uses: bitterbridge/github-actions/setup-terraform@v0.0.48
         with:
           terraform-version: ${{ steps.read-terraform-version.outputs.terraform-version }}
 
       - name: Terraform Init
         id: terraform-init
-        uses: bitterbridge/github-actions/terraform-init@v0.0.47
+        uses: bitterbridge/github-actions/terraform-init@v0.0.48
         with:
           working-directory: terraform
 
       - name: Terraform Validate
         id: terraform-validate
-        uses: bitterbridge/github-actions/terraform-validate@v0.0.47
+        uses: bitterbridge/github-actions/terraform-validate@v0.0.48
         with:
           working-directory: terraform
 
       - name: Terraform Plan
         id: terraform-plan
-        uses: bitterbridge/github-actions/terraform-plan@v0.0.47
+        uses: bitterbridge/github-actions/terraform-plan@v0.0.48
         env:
           GITHUB_TOKEN: ${{ steps.get-github-token.outputs.github-token }}
         with:
@@ -75,7 +75,7 @@ jobs:
 
       - name: Terraform Apply
         id: terraform-apply
-        uses: bitterbridge/github-actions/terraform-apply@v0.0.47
+        uses: bitterbridge/github-actions/terraform-apply@v0.0.48
         if: ${{ inputs.apply && steps.terraform-plan.outputs.plan-did-change == 'true' }}
         env:
           GITHUB_TOKEN: ${{ steps.get-github-token.outputs.github-token }}
