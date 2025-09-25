@@ -4,8 +4,7 @@ resource "aws_s3_bucket" "bare_domain" {
 }
 
 resource "aws_s3_bucket_public_access_block" "bare_domain" {
-  bucket = aws_s3_bucket.bare_domain.id
-
+  bucket                  = aws_s3_bucket.bare_domain.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
