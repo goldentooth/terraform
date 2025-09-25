@@ -6,7 +6,7 @@ updates:
       interval: "daily"
   - package-ecosystem: "terraform"
     directories:
-      - "/terraform"
+      - "/"
     groups:
       terraform-modules:
         patterns:

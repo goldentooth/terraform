@@ -57,13 +57,13 @@ jobs:
         id: terraform-init
         uses: bitterbridge/github-actions/terraform-init@v0.0.48
         with:
-          working-directory: terraform
+          working-directory: '.'
 
       - name: Terraform Validate
         id: terraform-validate
         uses: bitterbridge/github-actions/terraform-validate@v0.0.48
         with:
-          working-directory: terraform
+          working-directory: '.'
 
       - name: Terraform Plan
         id: terraform-plan
@@ -71,7 +71,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.get-github-token.outputs.github-token }}
         with:
-          working-directory: terraform
+          working-directory: '.'
 
       - name: Terraform Apply
         id: terraform-apply
@@ -80,5 +80,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.get-github-token.outputs.github-token }}
         with:
-          working-directory: terraform
+          working-directory: '.'
           plan-file: ${{ steps.terraform-plan.outputs.plan-file }}
