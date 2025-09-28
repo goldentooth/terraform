@@ -8,6 +8,5 @@ resource "aws_route53_record" "k8s_control_plane" {
     "10.4.0.10",
     "10.4.0.11",
     "10.4.0.12",
-    "10.4.0.13"
   ]
 }
