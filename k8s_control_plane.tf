@@ -5,8 +5,6 @@ resource "aws_route53_record" "k8s_control_plane" {
   ttl     = local.default_ttl
 
   records = [
-    "10.4.0.10",
-    "10.4.0.11",
-    "10.4.0.12",
+    "10.4.0.9", # kube-vip VIP for control plane HA
   ]
 }
