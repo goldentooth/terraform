@@ -1,41 +1,3 @@
-# Cloudflare account lookup for tunnel resources.
-data "cloudflare_accounts" "main" {}
-
-# Random secret used to authenticate the tunnel connector.
-resource "random_password" "pds_tunnel_secret" {
-  length  = 64
-  special = false
-}
-
-# Cloudflare Tunnel for routing public traffic to the PDS service.
-resource "cloudflare_zero_trust_tunnel_cloudflared" "pds" {
-  account_id = data.cloudflare_accounts.main.accounts[0].id
-  name       = "goldentooth-pds"
-  secret     = random_password.pds_tunnel_secret.result
-}
-
-# Tunnel ingress configuration — routes hostnames to the in-cluster PDS service.
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "pds" {
-  account_id = data.cloudflare_accounts.main.accounts[0].id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.pds.id
-
-  config = {
-    ingress_rules = [
-      {
-        hostname = "pds.goldentooth.net"
-        service  = "http://pds.pds.svc.cluster.local:3000"
-      },
-      {
-        hostname = "*.pds.goldentooth.net"
-        service  = "http://pds.pds.svc.cluster.local:3000"
-      },
-      {
-        service = "http_status:404"
-      },
-    ]
-  }
-}
-
 # Route53 CNAME pointing pds.goldentooth.net at the Cloudflare Tunnel.
 resource "aws_route53_record" "pds" {
   zone_id = local.zone_id
@@ -44,7 +6,7 @@ resource "aws_route53_record" "pds" {
   ttl     = local.default_ttl
 
   records = [
-    "${cloudflare_zero_trust_tunnel_cloudflared.pds.id}.cfargotunnel.com",
+    "${cloudflare_zero_trust_tunnel_cloudflared.goldentooth.id}.cfargotunnel.com",
   ]
 }
 
@@ -56,7 +18,7 @@ resource "aws_route53_record" "pds_wildcard" {
   ttl     = local.default_ttl
 
   records = [
-    "${cloudflare_zero_trust_tunnel_cloudflared.pds.id}.cfargotunnel.com",
+    "${cloudflare_zero_trust_tunnel_cloudflared.goldentooth.id}.cfargotunnel.com",
   ]
 }
 
@@ -93,15 +55,4 @@ resource "aws_s3_bucket_lifecycle_configuration" "pds_backup" {
       noncurrent_days = 30
     }
   }
-}
-
-output "pds_tunnel_id" {
-  description = "Cloudflare Tunnel ID for the PDS service."
-  value       = cloudflare_zero_trust_tunnel_cloudflared.pds.id
-}
-
-output "pds_tunnel_token" {
-  description = "Cloudflare Tunnel token for the PDS connector."
-  value       = cloudflare_zero_trust_tunnel_cloudflared.pds.tunnel_token
-  sensitive   = true
 }
