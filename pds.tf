@@ -65,6 +65,15 @@ resource "aws_s3_bucket" "pds_backup" {
   bucket = "goldentooth-pds-backup"
 }
 
+resource "aws_s3_bucket_public_access_block" "pds_backup" {
+  bucket = aws_s3_bucket.pds_backup.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_versioning" "pds_backup" {
   bucket = aws_s3_bucket.pds_backup.id
 
