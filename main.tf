@@ -4,9 +4,17 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 5.50.0, < 6.44"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = ">= 5.0, < 6.0"
+    }
     github = {
       source  = "integrations/github"
       version = ">= 6.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.0"
     }
   }
   backend "s3" {
@@ -26,6 +34,8 @@ provider "aws" {
     }
   }
 }
+
+provider "cloudflare" {}
 
 provider "github" {
   owner = "goldentooth"
