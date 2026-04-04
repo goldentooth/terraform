@@ -1,6 +1,3 @@
-# Cloudflare account lookup for tunnel resources.
-data "cloudflare_accounts" "main" {}
-
 # Random secret used to authenticate the tunnel connector.
 resource "random_password" "tunnel_secret" {
   length  = 64
@@ -9,14 +6,14 @@ resource "random_password" "tunnel_secret" {
 
 # Shared Cloudflare Tunnel for routing public traffic to cluster services.
 resource "cloudflare_zero_trust_tunnel_cloudflared" "goldentooth" {
-  account_id = data.cloudflare_accounts.main.accounts[0].id
+  account_id = local.cloudflare_account_id
   name       = "goldentooth"
   secret     = random_password.tunnel_secret.result
 }
 
 # Tunnel ingress configuration — add new services as hostname/service pairs.
 resource "cloudflare_zero_trust_tunnel_cloudflared_config" "goldentooth" {
-  account_id = data.cloudflare_accounts.main.accounts[0].id
+  account_id = local.cloudflare_account_id
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.goldentooth.id
 
   config = {
